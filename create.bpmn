@@ -48,16 +48,6 @@
       <bpmn:incoming>Flow_1rrpixs</bpmn:incoming>
       <bpmn:outgoing>Flow_0tfj2i3</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:task id="Activity_1l1jdor" name="Создать продукт в PSI">
-      <bpmn:extensionElements>
-        <camunda:inputOutput>
-          <camunda:outputParameter name="productId">${msisdn}_${productOfferingId}_productId</camunda:outputParameter>
-          <camunda:outputParameter name="success">${true}</camunda:outputParameter>
-        </camunda:inputOutput>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_024gc96</bpmn:incoming>
-      <bpmn:outgoing>Flow_1sn33wq</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:userTask id="createTarification" name="Подключить">
       <bpmn:extensionElements>
         <camunda:inputOutput>
@@ -105,6 +95,16 @@
       <bpmn:incoming>Flow_1j2v7tn</bpmn:incoming>
       <bpmn:outgoing>Flow_024gc96</bpmn:outgoing>
     </bpmn:task>
+    <bpmn:task id="Activity_1l1jdor" name="Создать продукт в PSI">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="productId">${msisdn}_${productOfferingId}_productId</camunda:outputParameter>
+          <camunda:outputParameter name="success">${true}</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_024gc96</bpmn:incoming>
+      <bpmn:outgoing>Flow_1sn33wq</bpmn:outgoing>
+    </bpmn:task>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0iiexkg">
@@ -114,14 +114,14 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_024gc96_di" bpmnElement="Flow_024gc96">
         <di:waypoint x="410" y="340" />
-        <di:waypoint x="550" y="340" />
+        <di:waypoint x="510" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1j2v7tn_di" bpmnElement="Flow_1j2v7tn">
         <di:waypoint x="228" y="340" />
         <di:waypoint x="310" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1sn33wq_di" bpmnElement="Flow_1sn33wq">
-        <di:waypoint x="650" y="340" />
+        <di:waypoint x="610" y="340" />
         <di:waypoint x="720" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0es7pqy_di" bpmnElement="Flow_0es7pqy">
@@ -180,10 +180,6 @@
       <bpmndi:BPMNShape id="Activity_1ywlqbb_di" bpmnElement="Activity_0teiwhh">
         <dc:Bounds x="1020" y="300" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1l1jdor_di" bpmnElement="Activity_1l1jdor">
-        <dc:Bounds x="550" y="300" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0meoghm_di" bpmnElement="createTarification">
         <dc:Bounds x="720" y="300" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -192,6 +188,10 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0cfj6e4_di" bpmnElement="Activity_0ldh941">
         <dc:Bounds x="310" y="300" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1l1jdor_di" bpmnElement="Activity_1l1jdor">
+        <dc:Bounds x="510" y="300" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>

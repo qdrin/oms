@@ -45,43 +45,6 @@
       <bpmn:incoming>Flow_024gc96</bpmn:incoming>
       <bpmn:outgoing>Flow_1sn33wq</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:userTask id="createTarification" name="Подключить">
-      <bpmn:extensionElements>
-        <camunda:inputOutput>
-          <camunda:outputParameter name="success">${active == "Yes"}</camunda:outputParameter>
-        </camunda:inputOutput>
-        <camunda:formData>
-          <camunda:formField id="active" label="Product active?" type="string" defaultValue="Yes" />
-          <camunda:formField id="validated" label="Validated?" type="boolean" defaultValue="${validated}" />
-        </camunda:formData>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1sn33wq</bpmn:incoming>
-      <bpmn:outgoing>Flow_0es7pqy</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:userTask id="Activity_0teiwhh" name="PSI: activation_completed">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="partyRoleId" label="Party Role" type="string" defaultValue="${partyRoleId}" />
-          <camunda:formField id="productOfferingId" label="FPC productOfferingId" type="string" defaultValue="${productOfferingId}" />
-          <camunda:formField id="productId" label="PSI productId" type="string" defaultValue="${productId}" />
-          <camunda:formField id="success" label="Successful?" type="boolean" defaultValue="${success}" />
-        </camunda:formData>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0es7pqy</bpmn:incoming>
-      <bpmn:outgoing>Flow_0tfj2i3</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:userTask id="Activity_1xw7c14" name="PSI: activation_aborted">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="partyRoleId" label="Party Role" type="string" defaultValue="${partyRoleId}" />
-          <camunda:formField id="productOfferingId" label="Offer" type="string" defaultValue="${productOfferingId}" />
-          <camunda:formField id="productId" label="PSI productId" type="string" defaultValue="${productId}" />
-          <camunda:formField id="success" label="Successful?" type="boolean" defaultValue="${success}" />
-        </camunda:formData>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0muvjmn</bpmn:incoming>
-      <bpmn:outgoing>Flow_0rmcona</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:endEvent id="Event_150y2bl" name="Подключение завершено">
       <bpmn:incoming>Flow_1mau7ys</bpmn:incoming>
     </bpmn:endEvent>
@@ -147,10 +110,6 @@ if ( ! res ) {
       <bpmn:outgoing>Flow_0sailzu</bpmn:outgoing>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_0eb4k4p" />
     </bpmn:boundaryEvent>
-    <bpmn:boundaryEvent id="Event_15c15j9" attachedToRef="createTarification">
-      <bpmn:outgoing>Flow_0muvjmn</bpmn:outgoing>
-      <bpmn:errorEventDefinition id="ErrorEventDefinition_1gq14xk" />
-    </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="Flow_0muvjmn" sourceRef="Event_15c15j9" targetRef="Activity_1xw7c14" />
     <bpmn:scriptTask id="Activity_0l04lgc" name="Отправить сообщение об ошибке" scriptFormat="Groovy">
       <bpmn:incoming>Flow_0zqiffs</bpmn:incoming>
@@ -158,6 +117,45 @@ if ( ! res ) {
       <bpmn:script>err = execution.getVariable("errorMessage");
 println "ERROR: ${err}";</bpmn:script>
     </bpmn:scriptTask>
+    <bpmn:userTask id="Activity_0teiwhh" name="PSI: activation_completed">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="partyRoleId" label="Party Role" type="string" defaultValue="${partyRoleId}" />
+          <camunda:formField id="productOfferingId" label="FPC productOfferingId" type="string" defaultValue="${productOfferingId}" />
+          <camunda:formField id="productId" label="PSI productId" type="string" defaultValue="${productId}" />
+          <camunda:formField id="success" label="Successful?" type="boolean" defaultValue="${success}" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0es7pqy</bpmn:incoming>
+      <bpmn:outgoing>Flow_0tfj2i3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_1xw7c14" name="PSI: activation_aborted">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="partyRoleId" label="Party Role" type="string" defaultValue="${partyRoleId}" />
+          <camunda:formField id="productOfferingId" label="Offer" type="string" defaultValue="${productOfferingId}" />
+          <camunda:formField id="productId" label="PSI productId" type="string" defaultValue="${productId}" />
+          <camunda:formField id="success" label="Successful?" type="boolean" defaultValue="${success}" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0muvjmn</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rmcona</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:scriptTask id="createTarification" name="Подключить" scriptFormat="Groovy">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_1sn33wq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0es7pqy</bpmn:outgoing>
+      <bpmn:script>m = execution.getVariable("msisdn");
+execution.setVariable("success", true);
+if ( m == "111" ) {
+  execution.setVariable("success", false);
+  throw new org.camunda.bpm.engine.delegate.BpmnError("FabricError");
+}</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:boundaryEvent id="Event_15c15j9" attachedToRef="createTarification">
+      <bpmn:outgoing>Flow_0muvjmn</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1gq14xk" />
+    </bpmn:boundaryEvent>
   </bpmn:process>
   <bpmn:message id="Message_2bsknfn" name="Message_2bsknfn" />
   <bpmn:error id="Error_1u74be7" name="Error_0ohmn76" />
@@ -176,20 +174,20 @@ println "ERROR: ${err}";</bpmn:script>
         <di:waypoint x="1412" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0rmcona_di" bpmnElement="Flow_0rmcona">
-        <di:waypoint x="1230" y="450" />
+        <di:waypoint x="1200" y="450" />
         <di:waypoint x="1412" y="450" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0tfj2i3_di" bpmnElement="Flow_0tfj2i3">
-        <di:waypoint x="1230" y="340" />
+        <di:waypoint x="1200" y="340" />
         <di:waypoint x="1295" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0es7pqy_di" bpmnElement="Flow_0es7pqy">
-        <di:waypoint x="930" y="340" />
-        <di:waypoint x="1130" y="340" />
+        <di:waypoint x="910" y="340" />
+        <di:waypoint x="1100" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1sn33wq_di" bpmnElement="Flow_1sn33wq">
         <di:waypoint x="720" y="340" />
-        <di:waypoint x="830" y="340" />
+        <di:waypoint x="810" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_024gc96_di" bpmnElement="Flow_024gc96">
         <di:waypoint x="550" y="340" />
@@ -221,9 +219,9 @@ println "ERROR: ${err}";</bpmn:script>
         <di:waypoint x="628" y="567" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0muvjmn_di" bpmnElement="Flow_0muvjmn">
-        <di:waypoint x="860" y="398" />
-        <di:waypoint x="860" y="450" />
-        <di:waypoint x="1130" y="450" />
+        <di:waypoint x="840" y="398" />
+        <di:waypoint x="840" y="450" />
+        <di:waypoint x="1100" y="450" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_1vv7oeo_di" bpmnElement="StartEvent_Create">
         <dc:Bounds x="192" y="322" width="36" height="36" />
@@ -238,15 +236,6 @@ println "ERROR: ${err}";</bpmn:script>
       <bpmndi:BPMNShape id="Activity_1l1jdor_di" bpmnElement="Activity_1l1jdor">
         <dc:Bounds x="620" y="300" width="100" height="80" />
         <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0meoghm_di" bpmnElement="createTarification">
-        <dc:Bounds x="830" y="300" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1ywlqbb_di" bpmnElement="Activity_0teiwhh">
-        <dc:Bounds x="1130" y="300" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_14kfh4n_di" bpmnElement="Activity_1xw7c14">
-        <dc:Bounds x="1130" y="410" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_150y2bl_di" bpmnElement="Event_150y2bl">
         <dc:Bounds x="1412" y="322" width="36" height="36" />
@@ -278,6 +267,15 @@ println "ERROR: ${err}";</bpmn:script>
       <bpmndi:BPMNShape id="Activity_1x5kagp_di" bpmnElement="Activity_0l04lgc">
         <dc:Bounds x="870" y="540" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ywlqbb_di" bpmnElement="Activity_0teiwhh">
+        <dc:Bounds x="1100" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_14kfh4n_di" bpmnElement="Activity_1xw7c14">
+        <dc:Bounds x="1100" y="410" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dsvjow_di" bpmnElement="createTarification">
+        <dc:Bounds x="810" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0hgvl5u_di" bpmnElement="Event_0wb5yzw">
         <dc:Bounds x="292" y="362" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -288,7 +286,7 @@ println "ERROR: ${err}";</bpmn:script>
         <dc:Bounds x="452" y="362" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_14zz4ll_di" bpmnElement="Event_15c15j9">
-        <dc:Bounds x="842" y="362" width="36" height="36" />
+        <dc:Bounds x="822" y="362" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

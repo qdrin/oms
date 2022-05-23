@@ -3,7 +3,7 @@
   {
     "msisdn": {"value": "222", "type": "String"},
     "productOfferingId": {"value": "offer1", "type": "String"},
-    "activity": {"value": "UNKNOWN", "type": "String"}
+    "actionType": {"value": "UNKNOWN", "type": "String"}
   },
   "businessKey": "11"
 }

@@ -167,14 +167,25 @@ if ( m == "111" ) {
     <bpmn:task id="Activity_01jjruu" name="Detect Activity">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:outputParameter name="activity">NEW</camunda:outputParameter>
+          <camunda:outputParameter name="activity">${activity}</camunda:outputParameter>
           <camunda:outputParameter name="msisdn">${msisdn}</camunda:outputParameter>
           <camunda:outputParameter name="productOfferingId">${productOfferingId}</camunda:outputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1xmbt42</bpmn:incoming>
-      <bpmn:outgoing>Flow_04xqi3q</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1dxdo4k</bpmn:outgoing>
     </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1xmbt42" sourceRef="MOPSEvent" targetRef="Activity_01jjruu" />
+    <bpmn:sequenceFlow id="Flow_0e8kg24" sourceRef="Activity_11q5c78" targetRef="Event_0rh0smq" />
+    <bpmn:exclusiveGateway id="Gateway_0fv41qd" name="activity">
+      <bpmn:incoming>Flow_1dxdo4k</bpmn:incoming>
+      <bpmn:outgoing>Flow_0uhog3f</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1ckl66u</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1dxdo4k" sourceRef="Activity_01jjruu" targetRef="Gateway_0fv41qd" />
+    <bpmn:sequenceFlow id="Flow_0uhog3f" name="NEW" sourceRef="Gateway_0fv41qd" targetRef="Activity_11q5c78">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${activity == "NEW"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:callActivity id="Activity_11q5c78" name="Create Product" calledElement="CreateProduct">
       <bpmn:extensionElements>
         <camunda:out variables="all" />
@@ -182,15 +193,28 @@ if ( m == "111" ) {
         <camunda:in source="msisdn" target="msisdn" />
         <camunda:in source="productOfferingId" target="productOfferingId" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_04xqi3q</bpmn:incoming>
+      <bpmn:incoming>Flow_0uhog3f</bpmn:incoming>
       <bpmn:outgoing>Flow_0e8kg24</bpmn:outgoing>
     </bpmn:callActivity>
-    <bpmn:sequenceFlow id="Flow_1xmbt42" sourceRef="MOPSEvent" targetRef="Activity_01jjruu" />
-    <bpmn:sequenceFlow id="Flow_04xqi3q" sourceRef="Activity_01jjruu" targetRef="Activity_11q5c78" />
-    <bpmn:endEvent id="Event_0rh0smq">
+    <bpmn:endEvent id="Event_0rh0smq" name="Product Created">
       <bpmn:incoming>Flow_0e8kg24</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0e8kg24" sourceRef="Activity_11q5c78" targetRef="Event_0rh0smq" />
+    <bpmn:sequenceFlow id="Flow_1ckl66u" sourceRef="Gateway_0fv41qd" targetRef="Activity_0ak3a77" />
+    <bpmn:endEvent id="Event_1cwr3ne" name="Product Modified">
+      <bpmn:incoming>Flow_1m8hcu1</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1m8hcu1" sourceRef="Activity_0ak3a77" targetRef="Event_1cwr3ne" />
+    <bpmn:userTask id="Activity_0ak3a77" name="Modify Product">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="msisdn" label="MSISDN" type="string" defaultValue="${msisdn}" />
+          <camunda:formField id="productOfferingId" label="Offer" type="string" defaultValue="${productOfferingId}" />
+          <camunda:formField id="activity" label="Action" type="string" defaultValue="${activity}" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1ckl66u</bpmn:incoming>
+      <bpmn:outgoing>Flow_1m8hcu1</bpmn:outgoing>
+    </bpmn:userTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0iiexkg">
@@ -322,20 +346,36 @@ if ( m == "111" ) {
         <dc:Bounds x="292" y="612" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_1gxunz3_di" bpmnElement="Participant_1gxunz3" isHorizontal="true">
-        <dc:Bounds x="112" y="80" width="1378" height="250" />
+        <dc:Bounds x="112" y="80" width="1378" height="340" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1xmbt42_di" bpmnElement="Flow_1xmbt42">
         <di:waypoint x="218" y="210" />
         <di:waypoint x="270" y="210" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_04xqi3q_di" bpmnElement="Flow_04xqi3q">
-        <di:waypoint x="370" y="210" />
-        <di:waypoint x="430" y="210" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0e8kg24_di" bpmnElement="Flow_0e8kg24">
-        <di:waypoint x="530" y="210" />
-        <di:waypoint x="592" y="210" />
+        <di:waypoint x="650" y="210" />
+        <di:waypoint x="732" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dxdo4k_di" bpmnElement="Flow_1dxdo4k">
+        <di:waypoint x="370" y="210" />
+        <di:waypoint x="425" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0uhog3f_di" bpmnElement="Flow_0uhog3f">
+        <di:waypoint x="475" y="210" />
+        <di:waypoint x="550" y="210" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="499" y="192" width="27" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ckl66u_di" bpmnElement="Flow_1ckl66u">
+        <di:waypoint x="450" y="235" />
+        <di:waypoint x="450" y="320" />
+        <di:waypoint x="550" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1m8hcu1_di" bpmnElement="Flow_1m8hcu1">
+        <di:waypoint x="650" y="320" />
+        <di:waypoint x="732" y="320" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0nkkdt4_di" bpmnElement="MOPSEvent">
         <dc:Bounds x="182" y="192" width="36" height="36" />
@@ -347,12 +387,30 @@ if ( m == "111" ) {
         <dc:Bounds x="270" y="170" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0fv41qd_di" bpmnElement="Gateway_0fv41qd" isMarkerVisible="true">
+        <dc:Bounds x="425" y="185" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="432" y="161" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0z4346w_di" bpmnElement="Activity_11q5c78">
-        <dc:Bounds x="430" y="170" width="100" height="80" />
+        <dc:Bounds x="550" y="170" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0rh0smq_di" bpmnElement="Event_0rh0smq">
-        <dc:Bounds x="592" y="192" width="36" height="36" />
+        <dc:Bounds x="732" y="192" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="710" y="235" width="81" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1cwr3ne_di" bpmnElement="Event_1cwr3ne">
+        <dc:Bounds x="732" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="709" y="345" width="83" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1etb05g_di" bpmnElement="Activity_0ak3a77">
+        <dc:Bounds x="550" y="280" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

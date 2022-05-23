@@ -1,0 +1,9 @@
+{
+  "variables":
+  {
+    "msisdn": {"value": "222", "type": "String"},
+    "productOfferingId": {"value": "offer1", "type": "String"},
+    "activity": {"value": "NEW", "type": "String"}
+  },
+  "businessKey": "11"
+}

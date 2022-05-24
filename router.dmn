@@ -85,7 +85,7 @@
           <text></text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1dhhvla">
-          <text>"StartDisconnection"</text>
+          <text>"StartDisconnect"</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_0q30nuw">
@@ -100,34 +100,6 @@
         </inputEntry>
         <outputEntry id="LiteralExpression_08c1okb">
           <text>"ModifyTarification"</text>
-        </outputEntry>
-      </rule>
-      <rule id="DecisionRule_1tb1e5q">
-        <inputEntry id="UnaryTests_1sajccr">
-          <text>"MODIFY"</text>
-        </inputEntry>
-        <inputEntry id="UnaryTests_1m6wq43">
-          <text>"ACTIVE"</text>
-        </inputEntry>
-        <inputEntry id="UnaryTests_0tryerv">
-          <text></text>
-        </inputEntry>
-        <outputEntry id="LiteralExpression_12rw5gh">
-          <text>"ModifyProduct"</text>
-        </outputEntry>
-      </rule>
-      <rule id="DecisionRule_1cpnoe2">
-        <inputEntry id="UnaryTests_1ybmdt9">
-          <text></text>
-        </inputEntry>
-        <inputEntry id="UnaryTests_0c6t16j">
-          <text></text>
-        </inputEntry>
-        <inputEntry id="UnaryTests_1ugvufa">
-          <text></text>
-        </inputEntry>
-        <outputEntry id="LiteralExpression_10hps3y">
-          <text></text>
         </outputEntry>
       </rule>
     </decisionTable>

@@ -144,7 +144,7 @@ println "ERROR: ${err}";</bpmn:script>
     <bpmn:startEvent id="MOPSEvent" name="MOPS Event">
       <bpmn:outgoing>Flow_1xmbt42</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:task id="DetectAction" name="Detect Action">
+    <bpmn:task id="ParseRoutingParams" name="Parse routing params">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:outputParameter name="action">${actionType}</camunda:outputParameter>
@@ -217,9 +217,9 @@ System.out.println(inputOrder);</bpmn:script>
     <bpmn:sequenceFlow id="Flow_0uhog3f" name="NEW" sourceRef="Gateway_0fv41qd" targetRef="Activity_11q5c78">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == "NEW"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_1dxdo4k" sourceRef="DetectAction" targetRef="Gateway_0fv41qd" />
+    <bpmn:sequenceFlow id="Flow_1dxdo4k" sourceRef="ParseRoutingParams" targetRef="Gateway_0fv41qd" />
     <bpmn:sequenceFlow id="Flow_0e8kg24" sourceRef="Activity_11q5c78" targetRef="Event_0rh0smq" />
-    <bpmn:sequenceFlow id="Flow_1xmbt42" sourceRef="MOPSEvent" targetRef="DetectAction" />
+    <bpmn:sequenceFlow id="Flow_1xmbt42" sourceRef="MOPSEvent" targetRef="ParseRoutingParams" />
     <bpmn:sequenceFlow id="Flow_0a1bl81" name="Default" sourceRef="Gateway_0fv41qd" targetRef="Event_0g2svln" />
     <bpmn:callActivity id="Activity_0ak3a77" name="Modify Tarification" calledElement="ModifyTarification">
       <bpmn:extensionElements>
@@ -532,7 +532,7 @@ println("ERROR: ${err}");</bpmn:script>
           <dc:Bounds x="168" y="185" width="64" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_01jjruu_di" bpmnElement="DetectAction">
+      <bpmndi:BPMNShape id="Activity_01jjruu_di" bpmnElement="ParseRoutingParams">
         <dc:Bounds x="270" y="120" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
@@ -695,25 +695,25 @@ println("ERROR: ${err}");</bpmn:script>
         <dc:Bounds x="112" y="1580" width="1378" height="460" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0pkowew_di" bpmnElement="Flow_0pkowew">
-        <di:waypoint x="218" y="1690" />
-        <di:waypoint x="270" y="1690" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1j3y262_di" bpmnElement="Flow_1j3y262">
-        <di:waypoint x="370" y="1690" />
-        <di:waypoint x="430" y="1690" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_013frx0_di" bpmnElement="Flow_013frx0">
-        <di:waypoint x="530" y="1690" />
-        <di:waypoint x="590" y="1690" />
+      <bpmndi:BPMNEdge id="Flow_1wqa8bc_di" bpmnElement="Flow_1wqa8bc">
+        <di:waypoint x="850" y="1690" />
+        <di:waypoint x="912" y="1690" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_02w2876_di" bpmnElement="Flow_02w2876">
         <di:waypoint x="690" y="1690" />
         <di:waypoint x="750" y="1690" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1wqa8bc_di" bpmnElement="Flow_1wqa8bc">
-        <di:waypoint x="850" y="1690" />
-        <di:waypoint x="912" y="1690" />
+      <bpmndi:BPMNEdge id="Flow_013frx0_di" bpmnElement="Flow_013frx0">
+        <di:waypoint x="530" y="1690" />
+        <di:waypoint x="590" y="1690" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1j3y262_di" bpmnElement="Flow_1j3y262">
+        <di:waypoint x="370" y="1690" />
+        <di:waypoint x="430" y="1690" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pkowew_di" bpmnElement="Flow_0pkowew">
+        <di:waypoint x="218" y="1690" />
+        <di:waypoint x="270" y="1690" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_1mrjuaf_di" bpmnElement="Event_1fiux3h">
         <dc:Bounds x="182" y="1672" width="36" height="36" />

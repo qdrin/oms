@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="SelectScenarioName" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.0.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <decision id="SelectName" name="Select Name">
+    <decisionTable id="DecisionTable_0mh0pdt" hitPolicy="FIRST">
+      <input id="Input_1" biodi:width="192">
+        <inputExpression id="InputExpression_1" typeRef="string">
+          <text>action</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1ecnpe9">
+        <inputExpression id="LiteralExpression_1k8bwyv" typeRef="string">
+          <text>status</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1yndzkk" biodi:width="192">
+        <inputExpression id="LiteralExpression_0r3d86l" typeRef="boolean">
+          <text>tarification</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" name="scenario" typeRef="string" biodi:width="192" />
+      <rule id="DecisionRule_1lsj9ys">
+        <inputEntry id="UnaryTests_00iogms">
+          <text>"NEW"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_032gxz7">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_019nofm">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0vukh6x">
+          <text>"Create"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1n6m65g">
+        <inputEntry id="UnaryTests_1vrepia">
+          <text>"RESUME"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0mnvkvo">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_008kyns">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_100yask">
+          <text>"Resume"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1cnwdkv">
+        <inputEntry id="UnaryTests_1w081wa">
+          <text>"SUSPEND"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_05xziul">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0yk9a3m">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0v24gew">
+          <text>"Suspend"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0rk4ubp">
+        <inputEntry id="UnaryTests_1um34i7">
+          <text>"DISCONNECT"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0nwqj6h">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0zad0as">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_13uzgt2">
+          <text>"Disconnect"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1ndj6xm">
+        <inputEntry id="UnaryTests_1fhfbdk">
+          <text>"MODIFY"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1q0ddap">
+          <text>"PENDING_DISCONNECT"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_17jbhmp">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1dhhvla">
+          <text>"StartDisconnection"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0q30nuw">
+        <inputEntry id="UnaryTests_1pt2l1s">
+          <text>"MODIFY"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_123a3ww">
+          <text>"ACTIVE"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_10mc1w3">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_08c1okb">
+          <text>"ModifyTarification"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1tb1e5q">
+        <inputEntry id="UnaryTests_1sajccr">
+          <text>"MODIFY"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1m6wq43">
+          <text>"ACTIVE"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0tryerv">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_12rw5gh">
+          <text>"ModifyProduct"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1cpnoe2">
+        <inputEntry id="UnaryTests_1ybmdt9">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0c6t16j">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ugvufa">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_10hps3y">
+          <text></text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="SelectName">
+        <dc:Bounds height="80" width="180" x="180" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

@@ -5,6 +5,7 @@
     <bpmn:participant id="Participant_02lh8it" name="Create Product Scenario" processRef="CreateProduct" />
     <bpmn:participant id="Participant_1gxunz3" name="Router" processRef="ChooseScenario" />
     <bpmn:participant id="Participant_14ac5c8" name="Modify Tarification Scenario" processRef="ModifyTarification" />
+    <bpmn:participant id="Participant_1r8lh7w" name="Modify Product Scenario" processRef="ModifyProduct" />
   </bpmn:collaboration>
   <bpmn:process id="CreateProduct" name="Create Product" isExecutable="true">
     <bpmn:laneSet id="LaneSet_0hm19sy" />
@@ -149,6 +150,14 @@ println "ERROR: ${err}";</bpmn:script>
           <camunda:outputParameter name="action">${actionType}</camunda:outputParameter>
           <camunda:outputParameter name="msisdn">${execution.getVariable("msisdn")}</camunda:outputParameter>
           <camunda:outputParameter name="productOfferingId">${productOfferingId}</camunda:outputParameter>
+          <camunda:outputParameter name="tarification">
+            <camunda:script scriptFormat="Groovy">res = execution.getVariable("tarification");
+if(! res) {
+  res = false;
+}
+return res;</camunda:script>
+          </camunda:outputParameter>
+          <camunda:outputParameter name="inputOrder">${execution.getVariable("inputOrder")}</camunda:outputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1xmbt42</bpmn:incoming>
@@ -172,7 +181,7 @@ println "ERROR: ${err}";</bpmn:script>
     <bpmn:endEvent id="Event_0rh0smq" name="Product Created">
       <bpmn:incoming>Flow_0e8kg24</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:endEvent id="Event_1cwr3ne" name="Product Modified">
+    <bpmn:endEvent id="Event_1cwr3ne" name="Tarification Modified">
       <bpmn:incoming>Flow_1m8hcu1</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:endEvent id="Event_0g2svln" name="Unknown Activity">
@@ -197,12 +206,13 @@ println "ERROR: ${err}";</bpmn:script>
         <bpmn:outgoing>Flow_01aat8v</bpmn:outgoing>
         <bpmn:script>code = execution.getVariable("errorCode");
 err = execution.getVariable("errorMessage");
-System.out.println("Error ${code}: ${err}");</bpmn:script>
+System.out.println("Error ${code}: ${err}");
+System.out.println(inputOrder);</bpmn:script>
       </bpmn:scriptTask>
     </bpmn:subProcess>
     <bpmn:sequenceFlow id="Flow_1m8hcu1" sourceRef="Activity_0ak3a77" targetRef="Event_1cwr3ne" />
-    <bpmn:sequenceFlow id="Flow_1ckl66u" name="MODIFY" sourceRef="Gateway_0fv41qd" targetRef="Activity_0ak3a77">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == "MODIFY"}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_1ckl66u" name="MODIFY and tarification" sourceRef="Gateway_0fv41qd" targetRef="Activity_0ak3a77">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == "MODIFY" &amp;&amp; tarification}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0uhog3f" name="NEW" sourceRef="Gateway_0fv41qd" targetRef="Activity_11q5c78">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == "NEW"}</bpmn:conditionExpression>
@@ -211,7 +221,7 @@ System.out.println("Error ${code}: ${err}");</bpmn:script>
     <bpmn:sequenceFlow id="Flow_0e8kg24" sourceRef="Activity_11q5c78" targetRef="Event_0rh0smq" />
     <bpmn:sequenceFlow id="Flow_1xmbt42" sourceRef="MOPSEvent" targetRef="DetectAction" />
     <bpmn:sequenceFlow id="Flow_0a1bl81" name="Default" sourceRef="Gateway_0fv41qd" targetRef="Event_0g2svln" />
-    <bpmn:callActivity id="Activity_0ak3a77" name="Modify Product" calledElement="ModifyTarification">
+    <bpmn:callActivity id="Activity_0ak3a77" name="Modify Tarification" calledElement="ModifyTarification">
       <bpmn:extensionElements>
         <camunda:in variables="all" />
         <camunda:out variables="all" />
@@ -220,9 +230,9 @@ System.out.println("Error ${code}: ${err}");</bpmn:script>
       <bpmn:outgoing>Flow_1m8hcu1</bpmn:outgoing>
     </bpmn:callActivity>
   </bpmn:process>
-  <bpmn:error id="Error_04dmhuz" name="UnknownActivity" errorCode="1001" camunda:errorMessage="Unknown Activity: ${action}" />
+  <bpmn:error id="Error_04dmhuz" name="UnknownActivity" errorCode="1001" camunda:errorMessage="Unknown action &#39;${action}&#39; with tarification: ${execution.getVariable(&#34;tarification&#34;)}" />
   <bpmn:process id="ModifyTarification" name="Modify Tarification" isExecutable="true">
-    <bpmn:startEvent id="ModifyTarification_StartEvent" name="Изменение цены офера">
+    <bpmn:startEvent id="ModifyTarification_StartEvent" name="Изменение цены продукта">
       <bpmn:outgoing>Flow_1ddmg9a</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_029b20o" messageRef="Message_2m1bfde" />
     </bpmn:startEvent>
@@ -329,6 +339,37 @@ println("ERROR: ${err}");</bpmn:script>
     </bpmn:userTask>
   </bpmn:process>
   <bpmn:message id="Message_2m1bfde" name="Message_2m1bfde" />
+  <bpmn:process id="ModifyProduct" name="Modify Product" isExecutable="true">
+    <bpmn:startEvent id="Event_1fiux3h" name="Изменение ножек продукта">
+      <bpmn:outgoing>Flow_0pkowew</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1yxi3lu" messageRef="Message_22nuo95" />
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_1ucp41w" name="Валидация">
+      <bpmn:incoming>Flow_0pkowew</bpmn:incoming>
+      <bpmn:outgoing>Flow_1j3y262</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0pkowew" sourceRef="Event_1fiux3h" targetRef="Activity_1ucp41w" />
+    <bpmn:task id="Activity_1f4fao8" name="Заполнить контекст">
+      <bpmn:incoming>Flow_1j3y262</bpmn:incoming>
+      <bpmn:outgoing>Flow_013frx0</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1j3y262" sourceRef="Activity_1ucp41w" targetRef="Activity_1f4fao8" />
+    <bpmn:task id="Activity_0d48onx" name="Выбор операции">
+      <bpmn:incoming>Flow_013frx0</bpmn:incoming>
+      <bpmn:outgoing>Flow_02w2876</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_013frx0" sourceRef="Activity_1f4fao8" targetRef="Activity_0d48onx" />
+    <bpmn:task id="Activity_1xor7wo" name="Применить операцию на фабриках">
+      <bpmn:incoming>Flow_02w2876</bpmn:incoming>
+      <bpmn:outgoing>Flow_1wqa8bc</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_02w2876" sourceRef="Activity_0d48onx" targetRef="Activity_1xor7wo" />
+    <bpmn:endEvent id="Event_0dumh99">
+      <bpmn:incoming>Flow_1wqa8bc</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1wqa8bc" sourceRef="Activity_1xor7wo" targetRef="Event_0dumh99" />
+  </bpmn:process>
+  <bpmn:message id="Message_22nuo95" name="Message_22nuo95" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0iiexkg">
       <bpmndi:BPMNShape id="Participant_02lh8it_di" bpmnElement="Participant_02lh8it" isHorizontal="true">
@@ -478,7 +519,7 @@ println("ERROR: ${err}");</bpmn:script>
         <di:waypoint x="450" y="270" />
         <di:waypoint x="550" y="270" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="458" y="243" width="44" height="14" />
+          <dc:Bounds x="458" y="236" width="64" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1m8hcu1_di" bpmnElement="Flow_1m8hcu1">
@@ -514,7 +555,7 @@ println("ERROR: ${err}");</bpmn:script>
       <bpmndi:BPMNShape id="Event_1cwr3ne_di" bpmnElement="Event_1cwr3ne">
         <dc:Bounds x="732" y="252" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="709" y="295" width="83" height="14" />
+          <dc:Bounds x="724" y="295" width="53" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1iq0chr_di" bpmnElement="Event_0g2svln">
@@ -547,6 +588,7 @@ println("ERROR: ${err}");</bpmn:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1pvojal_di" bpmnElement="Activity_0ak3a77">
         <dc:Bounds x="550" y="230" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_14ac5c8_di" bpmnElement="Participant_14ac5c8" isHorizontal="true">
         <dc:Bounds x="112" y="1090" width="1378" height="470" />
@@ -626,9 +668,6 @@ println("ERROR: ${err}");</bpmn:script>
       <bpmndi:BPMNShape id="Activity_0rpf3pm_di" bpmnElement="Activity_0cewily">
         <dc:Bounds x="750" y="1250" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1s1on62_di" bpmnElement="Activity_1n8xmg7">
-        <dc:Bounds x="1090" y="1140" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1b82org_di" bpmnElement="Activity_0mudtpw" isExpanded="true">
         <dc:Bounds x="200" y="1340" width="390" height="200" />
       </bpmndi:BPMNShape>
@@ -648,6 +687,58 @@ println("ERROR: ${err}");</bpmn:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0plrmmh_di" bpmnElement="Activity_0swdnbk">
         <dc:Bounds x="330" y="1400" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1s1on62_di" bpmnElement="Activity_1n8xmg7">
+        <dc:Bounds x="1090" y="1140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_1r8lh7w_di" bpmnElement="Participant_1r8lh7w" isHorizontal="true">
+        <dc:Bounds x="112" y="1580" width="1378" height="460" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0pkowew_di" bpmnElement="Flow_0pkowew">
+        <di:waypoint x="218" y="1690" />
+        <di:waypoint x="270" y="1690" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1j3y262_di" bpmnElement="Flow_1j3y262">
+        <di:waypoint x="370" y="1690" />
+        <di:waypoint x="430" y="1690" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_013frx0_di" bpmnElement="Flow_013frx0">
+        <di:waypoint x="530" y="1690" />
+        <di:waypoint x="590" y="1690" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02w2876_di" bpmnElement="Flow_02w2876">
+        <di:waypoint x="690" y="1690" />
+        <di:waypoint x="750" y="1690" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wqa8bc_di" bpmnElement="Flow_1wqa8bc">
+        <di:waypoint x="850" y="1690" />
+        <di:waypoint x="912" y="1690" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1mrjuaf_di" bpmnElement="Event_1fiux3h">
+        <dc:Bounds x="182" y="1672" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="160" y="1715" width="81" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ucp41w_di" bpmnElement="Activity_1ucp41w">
+        <dc:Bounds x="270" y="1650" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1f4fao8_di" bpmnElement="Activity_1f4fao8">
+        <dc:Bounds x="430" y="1650" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0d48onx_di" bpmnElement="Activity_0d48onx">
+        <dc:Bounds x="590" y="1650" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xor7wo_di" bpmnElement="Activity_1xor7wo">
+        <dc:Bounds x="750" y="1650" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0dumh99_di" bpmnElement="Event_0dumh99">
+        <dc:Bounds x="912" y="1672" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

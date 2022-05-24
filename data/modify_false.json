@@ -1,8 +1,7 @@
 {
   "variables":
   {
-    "inputOrder": {"value": "{\"tarification\": true}", "type":"Json"},
-    "tarification": {"value": true, "type": "Boolean"},
+    "inputOrder": {"value": "{\"tarification\": false}", "type":"Json"},
     "partyRoleId": {"value": "partyRoleId_1", "type": "String"},
     "productOfferingId": {"value": "offer1", "type": "String"},
     "productId": {"value": "product1", "type": "String"},

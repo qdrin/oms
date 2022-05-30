@@ -1,0 +1,11 @@
+{
+  "variables":
+  {
+    "inputOrder": {"value": "{\"tarification\": true}", "type":"Json"},
+    "partyRoleId": {"value": "partyRoleId_1", "type": "String"},
+    "productOfferingId": {"value": "offer1", "type": "String"},
+    "productId": {"value": "product1", "type": "String"},
+    "actionType": {"value": "RESUME", "type": "String"}
+  },
+  "businessKey": "11"
+}

@@ -1,11 +1,11 @@
 {
   "variables":
   {
-    "inputOrder": {"value": "{\"tarification\": false}", "type":"Json"},
+    "inputOrder": {"value": "{\"tarification\": true}", "type":"Json"},
     "partyRoleId": {"value": "partyRoleId_1", "type": "String"},
     "productOfferingId": {"value": "offer1", "type": "String"},
     "productId": {"value": "product1", "type": "String"},
-    "actionType": {"value": "MODIFY", "type": "String"}
+    "actionType": {"value": "DISCONNECT", "type": "String"}
   },
   "businessKey": "11"
 }

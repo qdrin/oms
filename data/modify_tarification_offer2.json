@@ -1,0 +1,13 @@
+{
+  "variables":
+  {
+    "inputOrder": {"value": "{\"tarification\": true}", "type":"Json"},
+    "tarification": {"value": true, "type": "Boolean"},
+    "partyRoleId": {"value": "partyRoleId_1", "type": "String"},
+    "productOfferingId": {"value": "offer2", "type": "String"},
+    "productId": {"value": "product1", "type": "String"},
+    "status": {"value": "ACTIVE", "type": "String"},
+    "actionType": {"value": "MODIFY", "type": "String"}
+  },
+  "businessKey": "11"
+}

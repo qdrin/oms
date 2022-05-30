@@ -1,0 +1,8 @@
+{
+  "variables":
+  {
+    "productOfferingId": {"value": "offer1", "type": "String"},
+    "actionType": {"value": "NEW", "type": "String"}
+  },
+  "businessKey": "11"
+}
